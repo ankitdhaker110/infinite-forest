@@ -1,0 +1,88 @@
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+
+const biomes = [
+  { 
+    name: "Jungle", 
+    color: "bg-green-700", 
+    animals: [
+      { name: "Tiger", sound: "roar", fact: "Tigers are the largest cat species." },
+      { name: "Parrot", sound: "squawk", fact: "Parrots can mimic human speech." },
+      { name: "Monkey", sound: "chatter", fact: "Monkeys use vocalizations to communicate." },
+      { name: "Jaguar", sound: "growl", fact: "Jaguars have the strongest bite of all big cats." },
+      { name: "Toucan", sound: "croak", fact: "Toucans have colorful beaks that help regulate body temperature." },
+      { name: "Sloth", sound: "squeak", fact: "Sloths move so slowly that algae grows on their fur." }
+    ],
+    backgroundEffect: "falling-leaves"
+  },
+  { 
+    name: "Tundra", 
+    color: "bg-blue-500", 
+    animals: [
+      { name: "Polar Bear", sound: "growl", fact: "Polar bears have black skin under their white fur." },
+      { name: "Snowy Owl", sound: "hoot", fact: "Snowy owls can hunt in total darkness." },
+      { name: "Arctic Fox", sound: "bark", fact: "Arctic foxes change fur color with seasons." },
+      { name: "Caribou", sound: "grunt", fact: "Caribou migrate farther than any other land mammal." },
+      { name: "Puffin", sound: "chirp", fact: "Puffins are excellent swimmers and can dive deep for fish." },
+      { name: "Musk Ox", sound: "snort", fact: "Musk oxen use their thick coats to survive freezing temperatures." }
+    ],
+    backgroundEffect: "falling-snow"
+  },
+  { 
+    name: "Swamp", 
+    color: "bg-green-900", 
+    animals: [
+      { name: "Alligator", sound: "hiss", fact: "Alligators can live up to 50 years in the wild." },
+      { name: "Frog", sound: "ribbit", fact: "Frogs absorb water through their skin." },
+      { name: "Heron", sound: "squawk", fact: "Herons have long legs for wading in water." },
+      { name: "Snapping Turtle", sound: "hiss", fact: "Snapping turtles have powerful jaws and a strong bite." },
+      { name: "Wood Stork", sound: "clatter", fact: "Wood storks use their beaks to sense and catch fish in murky water." },
+      { name: "Otter", sound: "chirp", fact: "Otters use rocks as tools to crack open shellfish." }
+    ],
+    rainEffect: true
+  }
+];
+
+export default function InfiniteForest() {
+  const [biomeIndex, setBiomeIndex] = useState(0);
+  const [animal, setAnimal] = useState(biomes[0].animals[0]);
+
+  useEffect(() => {
+    setAnimal(biomes[biomeIndex].animals[Math.floor(Math.random() * biomes[biomeIndex].animals.length)]);
+  }, [biomeIndex]);
+
+  return (
+    <div className={`relative min-h-screen flex flex-col items-center justify-center transition-all duration-700 ${biomes[biomeIndex].color}`}>
+      {biomes[biomeIndex].rainEffect && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="rain-animation"></div>
+        </div>
+      )}
+      {biomes[biomeIndex].backgroundEffect === "falling-leaves" && (
+        <div className="falling-leaves"></div>
+      )}
+      {biomes[biomeIndex].backgroundEffect === "falling-snow" && (
+        <div className="falling-snow"></div>
+      )}
+      
+      <motion.h1 className="text-white text-4xl font-bold mb-4" animate={{ opacity: [0, 1], y: [-20, 0] }}>
+        {biomes[biomeIndex].name} Biome
+      </motion.h1>
+      
+      <Card className="p-4 bg-white rounded-2xl shadow-lg w-80 text-center">
+        <CardContent>
+          <h2 className="text-2xl font-semibold">{animal.name}</h2>
+          <p className="text-gray-600">{animal.fact}</p>
+        </CardContent>
+      </Card>
+      
+      <Button className="mt-4 px-6 py-2 bg-gray-800 text-white rounded-lg" onClick={() => setBiomeIndex((biomeIndex + 1) % biomes.length)}>
+        Explore New Biome
+      </Button>
+
+      <footer className="mt-8 text-white text-sm">Made by Ankit</footer>
+    </div>
+  );
+}
